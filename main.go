@@ -58,6 +58,8 @@ const (
 func (g *Game) Update() error {
 	if !user.Menu {
 		g.count++
+		g.moveEnnemies()
+		g.movePlayer()
 	}
 	g.keys = inpututil.AppendPressedKeys(g.keys[:0])
 
@@ -68,6 +70,7 @@ func (g *Game) Update() error {
 		g.audioContext = audio.NewContext(sampleRate)
 	}
 	if user.Menu {
+		g.keyMenu()
 		return nil
 	}
 	// Decode an Ogg file.

@@ -3,20 +3,15 @@ package main
 import (
 	"image/color"
 	"os"
-	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
-func (g *Game) drawMenu(screen *ebiten.Image) {
-	w, h := player.Size()
-	op := &ebiten.DrawImageOptions{}
-
+func (g *Game) keyMenu() {
 	// Check user inputs
-	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) && time.Since(lastEnnemy) > 20*time.Millisecond {
-		lastEnnemy = time.Now()
+	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
 		user.MenuSelect++
 		if user.MenuSelect > 2 {
 			user.MenuSelect = 0
@@ -24,8 +19,7 @@ func (g *Game) drawMenu(screen *ebiten.Image) {
 		p := g.audioContext.NewPlayerFromBytes(hitSound)
 		p.SetVolume(0.1)
 		p.Play()
-	} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) && time.Since(lastEnnemy) > 20*time.Millisecond {
-		lastEnnemy = time.Now()
+	} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) {
 		user.MenuSelect--
 		if user.MenuSelect < 0 {
 			user.MenuSelect = 2
@@ -43,6 +37,11 @@ func (g *Game) drawMenu(screen *ebiten.Image) {
 			os.Exit(0)
 		}
 	}
+}
+
+func (g *Game) drawMenu(screen *ebiten.Image) {
+	w, h := player.Size()
+	op := &ebiten.DrawImageOptions{}
 
 	// Handle player image
 	op.GeoM.Scale(0.5, 0.5)

@@ -78,14 +78,10 @@ func (g *Game) pickEnnemy() {
 	}
 }
 
-func (g *Game) drawAllEnnemies(screen *ebiten.Image) {
-	w, h := ennemies.Size()
-	op := &ebiten.DrawImageOptions{}
-
+func (g *Game) moveEnnemies() {
 	var ennemiesAlive []*Ennemy
 	for _, e := range spawnedEnnemies {
 		// Calculates new pos
-
 		e.CurrentState.PosX = e.PreviousState.PosX + e.PreviousState.SpeedX
 		e.CurrentState.PosY = e.PreviousState.PosY + e.PreviousState.SpeedY
 		e.PreviousState = e.CurrentState
@@ -108,7 +104,15 @@ func (g *Game) drawAllEnnemies(screen *ebiten.Image) {
 				user.Score = 0
 			}
 		}
+	}
+	spawnedEnnemies = ennemiesAlive
+}
 
+func (g *Game) drawAllEnnemies(screen *ebiten.Image) {
+	w, h := ennemies.Size()
+	op := &ebiten.DrawImageOptions{}
+
+	for _, e := range spawnedEnnemies {
 		// Handle ennemies images
 		op.GeoM.Reset()
 		op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
@@ -122,8 +126,6 @@ func (g *Game) drawAllEnnemies(screen *ebiten.Image) {
 		op.ColorM.RotateHue(e.CurrentState.Angle)
 		screen.DrawImage(ennemies, op)
 	}
-
-	spawnedEnnemies = ennemiesAlive
 }
 
 func checkAngles(pAng, eAng float64) bool {

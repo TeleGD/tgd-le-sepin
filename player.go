@@ -9,10 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
-func (g *Game) drawPlayer(screen *ebiten.Image) {
-	w, h := player.Size()
-	op := &ebiten.DrawImageOptions{}
-
+func (g *Game) movePlayer() {
 	// Check user inputs
 	for _, key := range g.keys {
 		if key == ebiten.KeyArrowUp {
@@ -29,6 +26,11 @@ func (g *Game) drawPlayer(screen *ebiten.Image) {
 			break
 		}
 	}
+}
+
+func (g *Game) drawPlayer(screen *ebiten.Image) {
+	w, h := player.Size()
+	op := &ebiten.DrawImageOptions{}
 
 	// Handle player image
 	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
@@ -36,6 +38,7 @@ func (g *Game) drawPlayer(screen *ebiten.Image) {
 	op.GeoM.Translate(screenWidth/2, screenHeight/2)
 	screen.DrawImage(player, op)
 	text.Draw(screen, fmt.Sprintf("Score : %d", user.Score), text.FaceWithLineHeight(mplusBigFont, 80), 30, 30, color.White)
+	text.Draw(screen, fmt.Sprintf("FPS : %0.2f", ebiten.CurrentTPS()), text.FaceWithLineHeight(mplusBigFont, 80), screenWidth-200, 30, color.White)
 	text.Draw(screen, "Goal : Reach 250 !", text.FaceWithLineHeight(mplusBigFont, 80), 30, 80, color.White)
 	if user.Score >= 250 || user.HitScore {
 		user.HitScore = true
