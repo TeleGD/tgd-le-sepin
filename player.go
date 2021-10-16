@@ -16,25 +16,25 @@ func (g *Game) drawPlayer(screen *ebiten.Image) {
 	// Check user inputs
 	for _, key := range g.keys {
 		if key == ebiten.KeyArrowUp {
-			playerPos = 0
+			user.Position = 0
 			break
 		} else if key == ebiten.KeyArrowLeft {
-			playerPos = 3 * math.Pi / 2
+			user.Position = 3 * math.Pi / 2
 			break
 		} else if key == ebiten.KeyArrowRight {
-			playerPos = math.Pi / 2
+			user.Position = math.Pi / 2
 			break
 		} else if key == ebiten.KeyArrowDown {
-			playerPos = math.Pi
+			user.Position = math.Pi
 			break
 		}
 	}
 
 	// Handle player image
 	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
-	op.GeoM.Rotate(playerPos)
+	op.GeoM.Rotate(user.Position)
 	op.GeoM.Translate(screenWidth/2, screenHeight/2)
 	screen.DrawImage(player, op)
-	text.Draw(screen, fmt.Sprintf("Score : %d", playerScore), text.FaceWithLineHeight(mplusBigFont, 80), 30, 30, color.White)
-	text.Draw(screen, fmt.Sprintf("TPS : %0.2f", ebiten.CurrentTPS()), text.FaceWithLineHeight(mplusBigFont, 80), 30, 80, color.White)
+	text.Draw(screen, fmt.Sprintf("Score : %d", user.Score), text.FaceWithLineHeight(mplusBigFont, 80), 30, 30, color.White)
+	text.Draw(screen, fmt.Sprintf("TPS : %0.2f", ebiten.CurrentFPS()), text.FaceWithLineHeight(mplusBigFont, 80), 30, 80, color.White)
 }

@@ -27,10 +27,16 @@ var (
 	player          *ebiten.Image
 	ennemies        *ebiten.Image
 	spawnedEnnemies []*Ennemy
-	playerPos       float64
-	playerScore     int
 	lastEnnemy      time.Time
+	user            = &User{Menu: true}
 )
+
+type User struct {
+	Position   float64
+	Score      int
+	Menu       bool
+	MenuSelect int
+}
 
 type Game struct {
 	count int
@@ -55,37 +61,40 @@ func (g *Game) Update() error {
 	if g.player != nil {
 		return nil
 	}
-
 	if g.audioContext == nil {
 		g.audioContext = audio.NewContext(sampleRate)
 	}
-
+	if user.Menu {
+		return nil
+	}
 	// Decode an Ogg file.
 	// oggS is a decoded io.ReadCloser and io.Seeker.
 	oggS, err := vorbis.Decode(g.audioContext, bytes.NewReader(audioLoop))
 	if err != nil {
 		return err
 	}
-
 	// Create an infinite loop stream from the decoded bytes.
 	// s is still an io.ReadCloser and io.Seeker.
 	s := audio.NewInfiniteLoopWithIntro(oggS, introLengthInSecond*4*sampleRate, loopLengthInSecond*4*sampleRate)
-
 	g.player, err = g.audioContext.NewPlayer(s)
 	if err != nil {
 		return err
 	}
-
 	g.player.SetVolume(0.1)
 	// Play the infinite-length stream. This never ends.
 	g.player.Play()
+
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.pickEnnemy()
-	g.drawPlayer(screen)
-	g.drawAllEnnemies(screen)
+	if user.Menu {
+		g.drawMenu(screen)
+	} else {
+		g.pickEnnemy()
+		g.drawPlayer(screen)
+		g.drawAllEnnemies(screen)
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {

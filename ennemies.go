@@ -91,16 +91,16 @@ func (g *Game) drawAllEnnemies(screen *ebiten.Image) {
 			ennemiesAlive = append(ennemiesAlive, e)
 		} else {
 			// Check for success or loss
-			if checkAngles(playerPos, e.CurrentState.Angle) {
-				playerScore += 1
+			if checkAngles(user.Position, e.CurrentState.Angle) {
+				user.Score += 1
 				p := g.audioContext.NewPlayerFromBytes(hitSound)
 				p.SetVolume(0.1)
 				p.Play()
 			} else {
-				playerScore -= 2
+				user.Score -= 2
 			}
-			if playerScore < 0 {
-				playerScore = 0
+			if user.Score < 0 {
+				user.Score = 0
 			}
 		}
 
