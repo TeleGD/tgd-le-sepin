@@ -36,6 +36,7 @@ type User struct {
 	Score      int
 	Menu       bool
 	MenuSelect int
+	HitScore   bool
 }
 
 type Game struct {
@@ -55,7 +56,9 @@ const (
 )
 
 func (g *Game) Update() error {
-	g.count++
+	if !user.Menu {
+		g.count++
+	}
 	g.keys = inpututil.AppendPressedKeys(g.keys[:0])
 
 	if g.player != nil {

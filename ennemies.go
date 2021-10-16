@@ -67,7 +67,12 @@ func addEnnemy() {
 }
 
 func (g *Game) pickEnnemy() {
-	if rand.Float64() < float64(g.count)/1000 && time.Since(lastEnnemy) > 600*time.Millisecond {
+	var ecart time.Duration
+	ecart = 600
+	if g.count >= 1500 {
+		ecart = 500
+	}
+	if rand.Float64() < float64(g.count)/3000 && time.Since(lastEnnemy) > ecart*time.Millisecond {
 		lastEnnemy = time.Now()
 		addEnnemy()
 	}
