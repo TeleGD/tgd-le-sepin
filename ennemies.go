@@ -93,14 +93,14 @@ func (g *Game) moveEnnemies() {
 		} else {
 			// Check for success or loss
 			if checkAngles(user.Position, e.CurrentState.Angle) {
-				user.Score += 1
+				user.Score -= 1
 				p := g.audioContext.NewPlayerFromBytes(hitSound)
 				p.SetVolume(0.1)
 				p.Play()
 			} else {
-				user.Score -= 2
+				user.Score += 2
 			}
-			if user.Score <= 0 {
+			if -user.Score <= 0 {
 				user.GameOver = true
 			}
 		}

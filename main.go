@@ -28,7 +28,7 @@ var (
 	ennemies        *ebiten.Image
 	spawnedEnnemies []*Ennemy
 	lastEnnemy      time.Time
-	user            = &User{Menu: true, Score: 5}
+	user            = &User{Menu: true, Score: -5}
 )
 
 type User struct {

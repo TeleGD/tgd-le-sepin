@@ -36,7 +36,7 @@ func (g *Game) keyGameOverMenu() {
 		user.GameOver = false
 		spawnedEnnemies = []*Ennemy{}
 		g.count = 0
-		user.Score = 5
+		user.Score = -5
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeyKPEnter) {
@@ -46,7 +46,7 @@ func (g *Game) keyGameOverMenu() {
 			user.GameOver = false
 			spawnedEnnemies = []*Ennemy{}
 			g.count = 0
-			user.Score = 5
+			user.Score = -5
 		case 0:
 			os.Exit(0)
 		}
