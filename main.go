@@ -60,6 +60,7 @@ func (g *Game) Update() error {
 		g.count++
 		g.moveEnnemies()
 		g.movePlayer()
+		g.pickEnnemy()
 	}
 	g.keys = inpututil.AppendPressedKeys(g.keys[:0])
 
@@ -97,7 +98,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	if user.Menu {
 		g.drawMenu(screen)
 	} else {
-		g.pickEnnemy()
 		g.drawPlayer(screen)
 		g.drawAllEnnemies(screen)
 	}

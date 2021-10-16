@@ -38,7 +38,7 @@ func (g *Game) drawPlayer(screen *ebiten.Image) {
 	op.GeoM.Translate(screenWidth/2, screenHeight/2)
 	screen.DrawImage(player, op)
 	text.Draw(screen, fmt.Sprintf("Score : %d", user.Score), text.FaceWithLineHeight(mplusBigFont, 80), 30, 30, color.White)
-	text.Draw(screen, fmt.Sprintf("FPS : %0.2f", ebiten.CurrentTPS()), text.FaceWithLineHeight(mplusBigFont, 80), screenWidth-200, 30, color.White)
+	text.Draw(screen, fmt.Sprintf("TPS : %0.2f", ebiten.CurrentTPS()), text.FaceWithLineHeight(mplusBigFont, 80), screenWidth-200, 30, color.White)
 	text.Draw(screen, "Goal : Reach 250 !", text.FaceWithLineHeight(mplusBigFont, 80), 30, 80, color.White)
 	if user.Score >= 250 || user.HitScore {
 		user.HitScore = true
