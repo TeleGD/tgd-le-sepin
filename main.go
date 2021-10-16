@@ -28,15 +28,17 @@ var (
 	ennemies        *ebiten.Image
 	spawnedEnnemies []*Ennemy
 	lastEnnemy      time.Time
-	user            = &User{Menu: true}
+	user            = &User{Menu: true, Score: 5}
 )
 
 type User struct {
 	Position   float64
 	Score      int
-	Menu       bool
 	MenuSelect int
+	Menu       bool
 	HitScore   bool
+	Pause      bool
+	GameOver   bool
 }
 
 type Game struct {
@@ -57,10 +59,21 @@ const (
 
 func (g *Game) Update() error {
 	if !user.Menu {
-		g.count++
-		g.moveEnnemies()
-		g.movePlayer()
-		g.pickEnnemy()
+		if user.GameOver {
+			g.keyGameOverMenu()
+		} else {
+			if !user.Pause {
+				g.count++
+				g.moveEnnemies()
+				g.movePlayer()
+				g.pickEnnemy()
+				if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+					user.Pause = true
+				}
+			} else {
+				g.keyPauseMenu()
+			}
+		}
 	}
 	g.keys = inpututil.AppendPressedKeys(g.keys[:0])
 
@@ -98,8 +111,16 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	if user.Menu {
 		g.drawMenu(screen)
 	} else {
-		g.drawPlayer(screen)
-		g.drawAllEnnemies(screen)
+		if user.GameOver {
+			g.drawGameOverMenu(screen)
+		} else {
+			if user.Pause {
+				g.drawPauseMenu(screen)
+			} else {
+				g.drawPlayer(screen)
+				g.drawAllEnnemies(screen)
+			}
+		}
 	}
 }
 

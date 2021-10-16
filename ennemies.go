@@ -100,8 +100,8 @@ func (g *Game) moveEnnemies() {
 			} else {
 				user.Score -= 2
 			}
-			if user.Score < 0 {
-				user.Score = 0
+			if user.Score <= 0 {
+				user.GameOver = true
 			}
 		}
 	}
