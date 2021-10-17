@@ -5,13 +5,12 @@ import (
 	"os"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 func (g *Game) keyMenu() {
 	// Check user inputs
-	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
+	if g.pressedUp() {
 		user.MenuSelect++
 		if user.MenuSelect > 2 {
 			user.MenuSelect = 0
@@ -19,7 +18,7 @@ func (g *Game) keyMenu() {
 		p := g.audioContext.NewPlayerFromBytes(hitSound)
 		p.SetVolume(0.1)
 		p.Play()
-	} else if inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) {
+	} else if g.pressedDown() {
 		user.MenuSelect--
 		if user.MenuSelect < 0 {
 			user.MenuSelect = 2
@@ -29,7 +28,7 @@ func (g *Game) keyMenu() {
 		p.Play()
 	}
 
-	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeyKPEnter) {
+	if g.pressedEnter() {
 		switch user.MenuSelect {
 		case 2:
 			user.Menu = false

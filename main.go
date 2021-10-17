@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"image"
 	"log"
 	"time"
@@ -48,6 +49,9 @@ type Game struct {
 	// Relative to audio
 	player       *audio.Player
 	audioContext *audio.Context
+
+	// Relative to inputs
+	gamepadids []ebiten.GamepadID
 }
 
 const (
@@ -58,6 +62,19 @@ const (
 )
 
 func (g *Game) Update() error {
+	/*
+		Purely for debugging purpose
+	*/
+	for i := ebiten.StandardGamepadButton(0); i <= ebiten.StandardGamepadButtonMax; i++ {
+		for _, id := range g.gamepadids {
+			if inpututil.IsStandardGamepadButtonJustPressed(id, i) {
+				fmt.Printf("Key %v is being pressed on Gamepad %v.\n", i, id)
+			}
+		}
+	}
+	/*
+		----------------------------
+	*/
 	if !user.Menu {
 		if user.GameOver {
 			g.keyGameOverMenu()
@@ -67,7 +84,7 @@ func (g *Game) Update() error {
 				g.moveEnnemies()
 				g.movePlayer()
 				g.pickEnnemy()
-				if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+				if g.pressedEsc() {
 					user.Pause = true
 				}
 			} else {
@@ -75,6 +92,7 @@ func (g *Game) Update() error {
 			}
 		}
 	}
+	g.gamepadids = inpututil.AppendJustConnectedGamepadIDs(g.gamepadids)
 	g.keys = inpututil.AppendPressedKeys(g.keys[:0])
 
 	if g.player != nil {
@@ -185,7 +203,7 @@ func main() {
 
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("Le sépan")
-	if err := ebiten.RunGame(&Game{}); err != nil {
+	if err := ebiten.RunGame(&Game{gamepadids: []ebiten.GamepadID{}}); err != nil {
 		log.Fatal(err)
 	}
 }
