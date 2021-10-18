@@ -9,8 +9,8 @@ import (
 )
 
 type EnnemyState struct {
-	PosX   int
-	PosY   int
+	PosX   float64
+	PosY   float64
 	SpeedX int
 	SpeedY int
 	Angle  float64
@@ -21,9 +21,9 @@ type Ennemy struct {
 	PreviousState EnnemyState
 }
 
-func addEnnemy() {
+func addEnnemy(baseSpeed int) {
 	State := EnnemyState{}
-	speed := rand.Intn(5) + 1
+	speed := rand.Intn(15+baseSpeed) + baseSpeed
 	rng := rand.Float64()
 	if rng < 0.25 {
 		State = EnnemyState{
@@ -68,13 +68,15 @@ func addEnnemy() {
 
 func (g *Game) pickEnnemy() {
 	var ecart time.Duration
-	ecart = 600
-	if g.count >= 1500 {
-		ecart = 500
+	var baseSpeed int
+	ecart = time.Duration(1000 - g.count/10)
+	baseSpeed = 1 + g.count/1000
+	if g.count > 6000 {
+		ecart = 400
 	}
-	if rand.Float64() < float64(g.count)/3000 && time.Since(lastEnnemy) > ecart*time.Millisecond {
+	if rand.Float64() < float64(g.count)/6000 && time.Since(lastEnnemy) > ecart*time.Millisecond {
 		lastEnnemy = time.Now()
-		addEnnemy()
+		addEnnemy(baseSpeed)
 	}
 }
 
@@ -82,8 +84,8 @@ func (g *Game) moveEnnemies() {
 	var ennemiesAlive []*Ennemy
 	for _, e := range spawnedEnnemies {
 		// Calculates new pos
-		e.CurrentState.PosX = e.PreviousState.PosX + e.PreviousState.SpeedX
-		e.CurrentState.PosY = e.PreviousState.PosY + e.PreviousState.SpeedY
+		e.CurrentState.PosX = e.PreviousState.PosX + float64(e.PreviousState.SpeedX)/4.0
+		e.CurrentState.PosY = e.PreviousState.PosY + float64(e.PreviousState.SpeedY)/4.0
 		e.PreviousState = e.CurrentState
 
 		// Check hit box
@@ -122,7 +124,7 @@ func (g *Game) drawAllEnnemies(screen *ebiten.Image) {
 		} else {
 			op.GeoM.Rotate(e.CurrentState.Angle)
 		}
-		op.GeoM.Translate(float64(e.CurrentState.PosX), float64(e.CurrentState.PosY))
+		op.GeoM.Translate(e.CurrentState.PosX, e.CurrentState.PosY)
 		op.ColorM.RotateHue(e.CurrentState.Angle)
 		screen.DrawImage(ennemies, op)
 	}
